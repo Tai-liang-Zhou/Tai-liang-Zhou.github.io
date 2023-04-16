@@ -52,9 +52,6 @@ const config = {
           // editUrl:
           //   "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
         },
-        // studynotes: {
-        //   sidebarPath: require.resolve("./sidebars.js"),
-        // },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
