@@ -6,8 +6,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "Leon's Blog",
+  tagline: "紀錄隨寫筆記和閱讀心得",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
@@ -42,19 +42,34 @@ const config = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+          // editUrl:
+          //   "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+          // editUrl:
+          //   "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
         },
+        // studynotes: {
+        //   sidebarPath: require.resolve("./sidebars.js"),
+        // },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
+      }),
+    ],
+  ],
+  plugins: [
+    [
+      "content-docs",
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: "studynotes",
+        path: "studynotes",
+        routeBasePath: "studynotes",
+        // sidebarPath: require.resolve("./sidebarsStudynotes.js"),
       }),
     ],
   ],
@@ -65,7 +80,7 @@ const config = {
       // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
       navbar: {
-        title: "My Site",
+        title: "Leon's Blog",
         logo: {
           alt: "My Site Logo",
           src: "img/logo.svg",
@@ -77,12 +92,17 @@ const config = {
             position: "left",
             label: "Tutorial",
           },
-          { to: "/blog", label: "Blog", position: "left" },
           {
-            href: "https://github.com/facebook/docusaurus",
-            label: "GitHub",
-            position: "right",
+            to: "/studynotes/intro",
+            label: "Study Notes",
+            position: "left",
           },
+          { to: "/blog", label: "Blog", position: "left" },
+          // {
+          //   href: "https://github.com/facebook/docusaurus",
+          //   label: "GitHub",
+          //   position: "right",
+          // },
         ],
       },
       footer: {
