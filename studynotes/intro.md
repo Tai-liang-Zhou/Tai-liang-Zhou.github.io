@@ -1,6 +1,6 @@
 ---
 id: my-study-page
-title: My New Page
+title: Introduction
 sidebar_position: 1
 ---
 
