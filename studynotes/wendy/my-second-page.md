@@ -4,7 +4,7 @@ title: Introduction
 sidebar_position: 1
 ---
 
-# Wendy's 閱讀筆記
+# 吉娃娃 閱讀筆記
 
 目標在於養吉娃娃
 
