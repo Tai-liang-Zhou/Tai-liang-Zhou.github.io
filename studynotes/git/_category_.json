@@ -1,0 +1,8 @@
+{
+  "label": "git",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "git basic command"
+  }
+}
