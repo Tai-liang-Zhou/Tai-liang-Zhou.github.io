@@ -1,7 +1,7 @@
 ---
 id: golang-flag
 title: Golang Flag Example
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 ## Golang Flag

@@ -1,7 +1,7 @@
 ---
 id: filebeat
 title: Filebeat
-sidebar_position: 6
+sidebar_position: 2
 ---
 
 ## 使用 filebeat 目的
@@ -19,6 +19,28 @@ Filebeat、Logstash 都是用於收集、轉換和傳輸日誌數據的工具，
 | -------- | -------------------------------------------------------- | ------------------------------------------------------------- |
 | Filebeat | Lightweight<br/>Less system resources                    | Does not have data processing and transformation capabilities |
 | Logstash | Multiple data processing and transformation capabilities | Requires more system resources and occupies more memory       |
+
+## Filebeat 怎麼運作的
+
+filebeat 包含兩個主要部份 `harvesters` 和 `inputs` 會一起運作將 log 做輸出
+
+### harvester
+
+harvester 讀取每一份檔案 line by line 並把內容作輸出。
+在 harvester 開啟與關閉檔案時，如果檔案被移除或改名 Filebeat 還是會持續讀取檔案
+這個會造成一個 side effect ， 就是檔案會被保存在 disk 中，直到 harvester 讀取完檔案
+
+### inputs
+
+input 是用來管理 harvesters 和找尋可以用來讀取的資料源
+
+### Filebeat 怎麼保存每個檔案的狀態？
+
+Filebeat 保存讀取狀態到 registry file. 最後讀取的位置將會保存用以確保每一筆資料都有被上傳。 當 elastic 或 logstash 變得不可服務時，Filebeat 會保存最後讀取位置並持續讀取資料，直到服務回歸，Filebeat 會繼續將未上傳的資料上傳。Filebeat 用一組 unique id 代表讀取過的檔案名稱。
+
+### Filebeat 怎麼確保每筆資料都有上傳
+
+當 Filebeat 在傳送中被關閉時，他不會等待 elastic 確認收到之後才關閉。任何沒有收到確認的 event，Filebeat 會都重新傳送一次。這種方法有可能會造成有重複的資料出現。
 
 ## Add fields
 
