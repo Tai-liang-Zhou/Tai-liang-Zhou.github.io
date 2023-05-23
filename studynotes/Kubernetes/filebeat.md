@@ -42,6 +42,19 @@ Filebeat 保存讀取狀態到 registry file. 最後讀取的位置將會保存�
 
 當 Filebeat 在傳送中被關閉時，他不會等待 elastic 確認收到之後才關閉。任何沒有收到確認的 event，Filebeat 會都重新傳送一次。這種方法有可能會造成有重複的資料出現。
 
+### output
+
+bulk_max_size 用于設定發送到 Elasticsearch 的每個 batch 的 size 大小
+default 為 2048 (2MB)
+
+```yaml
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+  bulk_max_size: 4mb
+```
+
+以上範例將 `bulk_max_size` 設定為 4mb。調整調整越大的值代表較高的傳送效率。但也可能吃更多的記憶體或 ＩＯ
+
 ## Add fields
 
 增加自定義的 fields 到 filebeat example
