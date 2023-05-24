@@ -42,18 +42,79 @@ Filebeat 保存讀取狀態到 registry file. 最後讀取的位置將會保存�
 
 當 Filebeat 在傳送中被關閉時，他不會等待 elastic 確認收到之後才關閉。任何沒有收到確認的 event，Filebeat 會都重新傳送一次。這種方法有可能會造成有重複的資料出現。
 
-### output
+## filestream input
 
-bulk_max_size 用于設定發送到 Elasticsearch 的每個 batch 的 size 大小
-default 為 2048 (2MB)
+調整 filebeat 的各種 input 設定
+
+### harvester_limit
+
+用於設定單個 input 平行運行的 harvester 數量，每一個 harvester 用來處理一個檔案，如果增加 `harvester_limit` 的數量可以讓 Filebeat 同時處理更多文件。提高處理效率，default value 為 0，表示不設定 harvester 數量上限，很可能讓ＣＰＵ過高。
+
+```yaml
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      - /path/to/log/*.log
+    harvester_limit: 8
+```
+
+### check_interval
+
+用來設定 file scan 頻率，較小的值將使 filebeat 更頻繁的掃描檔案，也會增加 CPU 和 IO 的負擔
+
+```yaml
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      - /path/to/log/*.log
+    prospector.scanner.check_interval: 5s
+```
+
+### ignore_older
+
+`ignore_older` 用來設定忽略舊檔案的時間。減少文件處理的數量提高文件掃描效率。 在 Filebeat init 時期大量減少 cpu 非常有用。
+
+```yaml
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      - /path/to/log/*.log
+    ignore_older: 1d
+```
+
+### close_renamed & close_removed
+
+> The close_renamed and close_removed options can be useful on Windows to resolve issues related to file rotation. ref: [Open file handlers cause issues with Windows file rotation.](https://www.elastic.co/guide/en/beats/filebeat/7.17/windows-file-rotation.html)
+
+- `close_removed` default 情況下，當 filebeat 處理的文件被刪除的時候，filebeat 還是會持續打開文件，並嘗試讀取文件。通過將 `close_removed` 設定為 true ，可以讓 filebeat 在偵測到文件被刪除之後關閉文件讀取。
+- `close_renamed` default 情況下，當 filebeat 處理的文件被 rename 的時候，filebeat 還是會持續打開文件，並嘗試讀取文件。通過將 `close_renamed` 設定為 true ，可以讓 filebeat 在偵測到文件被 rename 之後關閉文件讀取。
+
+```yaml
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      - /path/to/log/*.log
+    close_removed: true
+    close_renamed: true
+```
+
+## filestream output
+
+filebeat 上傳頻率是由 filebeat 自己管理的，會根據 config yaml 設定控制上傳頻率。
+
+bulk_max_size 用于設定發送到 Elasticsearch 的每個 batch 的 event 數量 default 為 50。較大的 size 會減少 request 的頻率。相反，較小的 size 增加 request 頻率。
 
 ```yaml
 output.elasticsearch:
   hosts: ["localhost:9200"]
-  bulk_max_size: 4mb
+  bulk_max_size: 2048
 ```
 
-以上範例將 `bulk_max_size` 設定為 4mb。調整調整越大的值代表較高的傳送效率。但也可能吃更多的記憶體或 ＩＯ
+以上範例將 `bulk_max_size` 設定為 2048。調整調整越大的值代表較高的傳送效率。但也可能吃更多的記憶體或 ＩＯ
 
 ## Add fields
 
